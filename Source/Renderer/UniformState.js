@@ -125,7 +125,6 @@ import SceneMode from '../Scene/SceneMode.js';
         this._sunPositionColumbusView = new Cartesian3();
         this._sunDirectionWC = new Cartesian3();
         this._sunDirectionEC = new Cartesian3();
-        this._sunColor = new Cartesian3();
         this._moonDirectionEC = new Cartesian3();
 
         this._pass = undefined;
@@ -147,6 +146,8 @@ import SceneMode from '../Scene/SceneMode.js';
         this._specularEnvironmentMaps = undefined;
         this._specularEnvironmentMapsDimensions = new Cartesian2();
         this._specularEnvironmentMapsMaximumLOD = undefined;
+
+        this._lightColor = new Cartesian3();
 
         this._fogDensity = undefined;
 
@@ -726,17 +727,6 @@ import SceneMode from '../Scene/SceneMode.js';
         },
 
         /**
-         * The color of the light emitted by the sun.
-         * @memberof UniformState.prototype
-         * @type {Color}
-         */
-        sunColor: {
-            get: function() {
-                return this._sunColor;
-            }
-        },
-
-        /**
          * A normalized vector to the moon in eye coordinates at the current scene time.  In 3D mode, this
          * returns the actual vector from the camera position to the moon position.  In 2D and Columbus View, it returns
          * the vector from the equivalent 3D camera position to the position of the moon in the 3D scene.
@@ -903,6 +893,17 @@ import SceneMode from '../Scene/SceneMode.js';
         specularEnvironmentMapsMaximumLOD : {
             get : function() {
                 return this._specularEnvironmentMapsMaximumLOD;
+            }
+        },
+
+        /**
+         * The color of the light emitted by the scene's light source.
+         * @memberof UniformState.prototype
+         * @type {Cartesian3}
+         */
+        lightColor: {
+            get: function() {
+                return this._lightColor;
             }
         },
 
@@ -1112,7 +1113,10 @@ import SceneMode from '../Scene/SceneMode.js';
         }
 
         setSunAndMoonDirections(this, frameState);
-        this._sunColor = Cartesian3.clone(frameState.sunColor, this._sunColor);
+
+        var light = frameState.light;
+        this._lightColor = Cartesian3.clone(light.color, this._lightColor);
+        this._lightColor = Cartesian3.multiplyByScalar(this._lightColor, light.intensity, this._lightColor);
 
         var brdfLutGenerator = frameState.brdfLutGenerator;
         var brdfLut = defined(brdfLutGenerator) ? brdfLutGenerator.colorTexture : undefined;

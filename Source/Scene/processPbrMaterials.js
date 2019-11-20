@@ -557,9 +557,6 @@ import ModelUtility from './ModelUtility.js';
         fragmentShader += '#ifdef USE_IBL_LIGHTING \n';
         fragmentShader += 'uniform vec2 gltf_iblFactor; \n';
         fragmentShader += '#endif \n';
-        fragmentShader += '#ifdef USE_CUSTOM_LIGHT_COLOR \n';
-        fragmentShader += 'uniform vec3 gltf_lightColor; \n';
-        fragmentShader += '#endif \n';
 
         fragmentShader += 'void main(void) \n{\n';
         fragmentShader += fragmentShaderMain;
@@ -688,12 +685,7 @@ import ModelUtility from './ModelUtility.js';
 
             // Generate fragment shader's lighting block
             // The Sun is brighter than your average light source, and has a yellowish tint balanced by the Earth's ambient blue.
-            fragmentShader += '#ifndef USE_CUSTOM_LIGHT_COLOR \n';
-            fragmentShader += '    vec3 lightColor = vec3(1.5, 1.4, 1.2);\n';
-            fragmentShader += '#else \n';
-            fragmentShader += '    vec3 lightColor = gltf_lightColor;\n';
-            fragmentShader += '#endif \n';
-            fragmentShader += '    vec3 l = normalize(czm_sunDirectionEC);\n';
+            fragmentShader += '    vec3 l = normalize(czm_lightDirectionEC);\n';
             fragmentShader += '    vec3 h = normalize(v + l);\n';
             fragmentShader += '    float NdotL = clamp(dot(n, l), 0.001, 1.0);\n';
             fragmentShader += '    float NdotV = abs(dot(n, v)) + 0.001;\n';
@@ -723,7 +715,7 @@ import ModelUtility from './ModelUtility.js';
 
             fragmentShader += '    vec3 diffuseContribution = (1.0 - F) * lambertianDiffuse(diffuseColor);\n';
             fragmentShader += '    vec3 specularContribution = F * G * D / (4.0 * NdotL * NdotV);\n';
-            fragmentShader += '    vec3 color = NdotL * lightColor * (diffuseContribution + specularContribution);\n';
+            fragmentShader += '    vec3 color = NdotL * czm_lightColor * (diffuseContribution + specularContribution);\n';
 
             // Use the procedural IBL if there are no environment maps
             fragmentShader += '#if defined(USE_IBL_LIGHTING) && !defined(DIFFUSE_IBL) && !defined(SPECULAR_IBL) \n';

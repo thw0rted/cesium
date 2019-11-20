@@ -211,7 +211,6 @@ import ShadowMode from './ShadowMode.js';
      * @param {ClippingPlaneCollection} [options.clippingPlanes] The {@link ClippingPlaneCollection} used to selectively disable rendering the model.
      * @param {Boolean} [options.dequantizeInShader=true] Determines if a {@link https://github.com/google/draco|Draco} encoded model is dequantized on the GPU. This decreases total memory usage for encoded models.
      * @param {Cartesian2} [options.imageBasedLightingFactor=Cartesian2(1.0, 1.0)] Scales diffuse and specular image-based lighting from the earth, sky, atmosphere and star skybox.
-     * @param {Cartesian3} [options.lightColor] The color and intensity of the sunlight used to shade the model.
      * @param {Number} [options.luminanceAtZenith=0.2] The sun's luminance at the zenith in kilo candela per meter squared to use for this model's procedural environment map.
      * @param {Cartesian3[]} [options.sphericalHarmonicCoefficients] The third order spherical harmonic coefficients used for the diffuse color of image-based lighting.
      * @param {String} [options.specularEnvironmentMaps] A URL to a KTX file that contains a cube map of the specular lighting and the convoluted specular mipmaps.
@@ -604,7 +603,6 @@ import ShadowMode from './ShadowMode.js';
 
         this._imageBasedLightingFactor = new Cartesian2(1.0, 1.0);
         Cartesian2.clone(options.imageBasedLightingFactor, this._imageBasedLightingFactor);
-        this._lightColor = Cartesian3.clone(options.lightColor);
 
         this._luminanceAtZenith = undefined;
         this.luminanceAtZenith = defaultValue(options.luminanceAtZenith, 0.2);
@@ -1064,32 +1062,6 @@ import ShadowMode from './ShadowMode.js';
                 this._shouldRegenerateShaders = this._shouldRegenerateShaders || (this._imageBasedLightingFactor.x > 0.0 && value.x === 0.0) || (this._imageBasedLightingFactor.x === 0.0 && value.x > 0.0);
                 this._shouldRegenerateShaders = this._shouldRegenerateShaders || (this._imageBasedLightingFactor.y > 0.0 && value.y === 0.0) || (this._imageBasedLightingFactor.y === 0.0 && value.y > 0.0);
                 Cartesian2.clone(value, this._imageBasedLightingFactor);
-            }
-        },
-
-        /**
-         * The color and intensity of the sunlight used to shade the model.
-         * <p>
-         * For example, disabling additional light sources by setting <code>model.imageBasedLightingFactor = new Cesium.Cartesian2(0.0, 0.0)</code> will make the
-         * model much darker. Here, increasing the intensity of the light source will make the model brighter.
-         * </p>
-         *
-         * @memberof Model.prototype
-         *
-         * @type {Cartesian3}
-         * @default undefined
-         */
-        lightColor : {
-            get : function() {
-                return this._lightColor;
-            },
-            set : function(value) {
-                var lightColor = this._lightColor;
-                if (value === lightColor || Cartesian3.equals(value, lightColor)) {
-                    return;
-                }
-                this._shouldRegenerateShaders = this._shouldRegenerateShaders || (defined(lightColor) && !defined(value)) || (defined(value) && !defined(lightColor));
-                this._lightColor = Cartesian3.clone(value, lightColor);
             }
         },
 
@@ -2266,10 +2238,6 @@ import ShadowMode from './ShadowMode.js';
             drawFS = '#define USE_IBL_LIGHTING \n\n' + drawFS;
         }
 
-        if (defined(model._lightColor)) {
-            drawFS = '#define USE_CUSTOM_LIGHT_COLOR \n\n' + drawFS;
-        }
-
         if (model._sourceVersion !== '2.0' || model._sourceKHRTechniquesWebGL) {
             drawFS = ShaderSource.replaceMain(drawFS, 'non_gamma_corrected_main');
             drawFS =
@@ -2351,10 +2319,6 @@ import ShadowMode from './ShadowMode.js';
         var useIBL = model._imageBasedLightingFactor.x > 0.0 || model._imageBasedLightingFactor.y > 0.0;
         if (useIBL) {
             drawFS = '#define USE_IBL_LIGHTING \n\n' + drawFS;
-        }
-
-        if (defined(model._lightColor)) {
-            drawFS = '#define USE_CUSTOM_LIGHT_COLOR \n\n' + drawFS;
         }
 
         if (model._sourceVersion !== '2.0' || model._sourceKHRTechniquesWebGL) {
@@ -3315,12 +3279,6 @@ import ShadowMode from './ShadowMode.js';
         };
     }
 
-    function createLightColorFunction(model) {
-        return function() {
-            return model._lightColor;
-        };
-    }
-
     function createLuminanceAtZenithFunction(model) {
         return function() {
             return model.luminanceAtZenith;
@@ -3445,7 +3403,6 @@ import ShadowMode from './ShadowMode.js';
                 gltf_clippingPlanesEdgeStyle : createClippingPlanesEdgeStyleFunction(model),
                 gltf_clippingPlanesMatrix : createClippingPlanesMatrixFunction(model),
                 gltf_iblFactor : createIBLFactorFunction(model),
-                gltf_lightColor : createLightColorFunction(model),
                 gltf_sphericalHarmonicCoefficients : createSphericalHarmonicCoefficientsFunction(model),
                 gltf_specularMap : createSpecularEnvironmentMapFunction(model),
                 gltf_specularMapSize : createSpecularEnvironmentMapSizeFunction(model),

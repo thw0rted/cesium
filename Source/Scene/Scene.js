@@ -67,6 +67,7 @@ import SceneTransitioner from './SceneTransitioner.js';
 import ScreenSpaceCameraController from './ScreenSpaceCameraController.js';
 import ShadowMap from './ShadowMap.js';
 import StencilConstants from './StencilConstants.js';
+import SunLight from './SunLight.js';
 import SunPostProcess from './SunPostProcess.js';
 import TweenCollection from './TweenCollection.js';
 import View from './View.js';
@@ -131,7 +132,7 @@ import View from './View.js';
      * @param {Boolean} [options.orderIndependentTranslucency=true] If true and the configuration supports it, use order independent translucency.
      * @param {Boolean} [options.scene3DOnly=false] If true, optimizes memory use and performance for 3D mode but disables the ability to use 2D or Columbus View.
      * @param {Number} [options.terrainExaggeration=1.0] A scalar used to exaggerate the terrain. Note that terrain exaggeration will not modify any other primitive as they are positioned relative to the ellipsoid.
-     * @param {Boolean} [options.shadows=false] Determines if shadows are cast by the sun.
+     * @param {Boolean} [options.shadows=false] Determines if shadows are cast by the each light source.
      * @param {MapMode2D} [options.mapMode2D=MapMode2D.INFINITE_SCROLL] Determines if the 2D map is rotatable or can be scrolled infinitely in the horizontal direction.
      * @param {Boolean} [options.requestRenderMode=false] If true, rendering a frame will only occur when needed as determined by changes within the scene. Enabling improves performance of the application, but requires using {@link Scene#requestRender} to render a new frame explicitly in this mode. This will be necessary in many cases after making changes to the scene in other parts of the API. See {@link https://cesium.com/blog/2018/01/24/cesium-scene-rendering-performance/|Improving Performance with Explicit Rendering}.
      * @param {Number} [options.maximumRenderTimeChange=0.0] If requestRenderMode is true, this value defines the maximum change in simulation time allowed before a render is requested. See {@link https://cesium.com/blog/2018/01/24/cesium-scene-rendering-performance/|Improving Performance with Explicit Rendering}.
@@ -536,16 +537,15 @@ import View from './View.js';
          */
         this.fog = new Fog();
 
-        this._sunCamera = new Camera(this);
+        this._shadowMapCamera = new Camera(this);
 
         /**
-         * The shadow map in the scene. When enabled, models, primitives, and the globe may cast and receive shadows.
-         * By default the light source of the shadow map is the sun.
+         * The shadow map for {@link Scene#light}. When enabled, models, primitives, and the globe may cast and receive shadows.
          * @type {ShadowMap}
          */
         this.shadowMap = new ShadowMap({
             context : context,
-            lightCamera : this._sunCamera,
+            lightCamera : this._shadowMapCamera,
             enabled : defaultValue(options.shadows, false)
         });
 
@@ -699,7 +699,6 @@ import View from './View.js';
         this._hdrDirty = undefined;
         this.highDynamicRange = false;
         this.gamma = 2.2;
-        this._sunColor = new Cartesian3(1.8, 1.85, 2.0);
 
         /**
          * The spherical harmonic coefficients for image-based lighting of PBR models.
@@ -713,6 +712,12 @@ import View from './View.js';
          */
         this.specularEnvironmentMaps = undefined;
         this._specularEnvironmentMapAtlas = undefined;
+
+        /**
+         * The light source. Defaults to the sun.
+         * @type {Light}
+         */
+        this.light = new SunLight();
 
         // Give frameState, camera, and screen space camera controller initial state before rendering
         updateFrameNumber(this, 0.0, JulianDate.now());
@@ -1541,22 +1546,6 @@ import View from './View.js';
         },
 
         /**
-         * Gets or sets the color of the light emitted by the sun.
-         *
-         * @memberof Scene.prototype
-         * @type {Cartesian3}
-         * @default Cartesian3(1.8, 1.85, 2.0)
-         */
-        sunColor: {
-            get: function() {
-                return this._sunColor;
-            },
-            set: function(value) {
-                this._sunColor = value;
-            }
-        },
-
-        /**
          * Ratio between a pixel and a density-independent pixel. Provides a standard unit of
          * measure for real pixel measurements appropriate to a particular device.
          *
@@ -1757,7 +1746,7 @@ import View from './View.js';
         frameState.minimumDisableDepthTestDistance = this._minimumDisableDepthTestDistance;
         frameState.invertClassification = this.invertClassification;
         frameState.useLogDepth = this._logDepthBuffer && !(this.camera.frustum instanceof OrthographicFrustum || this.camera.frustum instanceof OrthographicOffCenterFrustum);
-        frameState.sunColor = this._sunColor;
+        frameState.light = this.light;
 
         if (defined(this._specularEnvironmentMapAtlas) && this._specularEnvironmentMapAtlas.ready) {
             frameState.specularEnvironmentMaps = this._specularEnvironmentMapAtlas.texture;
@@ -3249,8 +3238,12 @@ import View from './View.js';
 
         var shadowMap = scene.shadowMap;
         if (defined(shadowMap) && shadowMap.enabled) {
-            // Update the sun's direction
-            Cartesian3.negate(us.sunDirectionWC, scene._sunCamera.direction);
+            if (scene.light instanceof SunLight) {
+                // Negate the sun direction so that it is from the sun, not to the sun
+                Cartesian3.negate(us.sunDirectionWC, scene._shadowMapCamera.direction);
+            } else {
+                Cartesian3.clone(scene.light.direction, scene._shadowMapCamera.direction);
+            }
             frameState.shadowMaps.push(shadowMap);
         }
 

@@ -50,7 +50,7 @@ import Primitive from './Primitive.js';
 import ShadowMapShader from './ShadowMapShader.js';
 
     /**
-     * Use {@link Viewer#shadowMap} to get the scene's shadow map originating from the sun. Do not construct this directly.
+     * Use {@link Viewer#shadowMap} to get the scene's shadow map. Do not construct this directly.
      *
      * <p>
      * The normalOffset bias pushes the shadows forward slightly, and may be disabled

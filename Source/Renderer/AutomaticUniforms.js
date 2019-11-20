@@ -1766,16 +1766,16 @@ import WebGLConstants from '../Core/WebGLConstants.js';
         }),
 
         /**
-         * An automatic GLSL uniform that defines the color of light emitted by the sun.
+         * An automatic GLSL uniform that defines the color of light emitted by the scene's light source.
          *
-         * @alias czm_sunColor
+         * @alias czm_lightColor
          * @glslUniform
          */
-        czm_sunColor: new AutomaticUniform({
+        czm_lightColor: new AutomaticUniform({
             size: 1,
             datatype: WebGLConstants.FLOAT_VEC3,
             getValue: function(uniformState) {
-                return uniformState.sunColor;
+                return uniformState.lightCollr;
             }
         })
     };
