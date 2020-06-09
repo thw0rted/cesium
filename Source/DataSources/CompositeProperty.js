@@ -27,7 +27,8 @@ function subscribeAll(property, eventHelper, definitionChanged, intervals) {
  *
  * @alias CompositeProperty
  * @constructor
- * @template WrappedType extends (number | Packable) = (number | Packable)
+ * *** TODO *** this type should have a *static constraint* to implement Packable, but I don't know if that's possible
+ * @template WrappedType = any
  *
  *
  * @example
