@@ -7,7 +7,7 @@ import Property from "./Property.js";
 /**
  * A {@link MaterialProperty} that maps to solid color {@link Material} uniforms.
  *
- * @param {Property|Color} [color=Color.WHITE] The {@link Color} Property to be used.
+ * @param {Property<Color>|Color} [color=Color.WHITE] The {@link Color} Property to be used.
  *
  * @alias ColorMaterialProperty
  * @constructor
@@ -53,7 +53,7 @@ Object.defineProperties(ColorMaterialProperty.prototype, {
   /**
    * Gets or sets the {@link Color} {@link Property}.
    * @memberof ColorMaterialProperty.prototype
-   * @type {Property|undefined}
+   * @type {Property<Color>|undefined}
    * @default Color.WHITE
    */
   color: createPropertyDescriptor("color"),
@@ -73,8 +73,8 @@ ColorMaterialProperty.prototype.getType = function (time) {
  * Gets the value of the property at the provided time.
  *
  * @param {JulianDate} time The time for which to retrieve the value.
- * @param {Object} [result] The object to store the value into, if omitted, a new instance is created and returned.
- * @returns {Object} The modified result parameter or a new instance if the result parameter was not supplied.
+ * @param {Color} [result] The object to store the value into, if omitted, a new instance is created and returned.
+ * @returns {Color} The modified result parameter or a new instance if the result parameter was not supplied.
  */
 ColorMaterialProperty.prototype.getValue = function (time, result) {
   if (!defined(result)) {

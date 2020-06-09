@@ -9,6 +9,7 @@ import DeveloperError from "../Core/DeveloperError.js";
  * @alias Property
  * @constructor
  * @abstract
+ * @template WrappedType = any
  *
  * @see CompositeProperty
  * @see ConstantProperty
@@ -53,8 +54,8 @@ Object.defineProperties(Property.prototype, {
  * @function
  *
  * @param {JulianDate} time The time for which to retrieve the value.
- * @param {Object} [result] The object to store the value into, if omitted, a new instance is created and returned.
- * @returns {Object} The modified result parameter or a new instance if the result parameter was not supplied.
+ * @param {WrappedType} [result] The object to store the value into, if omitted, a new instance is created and returned.
+ * @returns {WrappedType | undefined} The modified result parameter or a new instance if the result parameter was not supplied.
  */
 Property.prototype.getValue = DeveloperError.throwInstantiationError;
 

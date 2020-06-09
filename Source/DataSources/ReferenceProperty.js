@@ -49,6 +49,7 @@ function resolve(that) {
  *
  * @alias ReferenceProperty
  * @constructor
+ * @template WrappedType = any
  *
  * @param {EntityCollection} targetCollection The entity collection which will be used to resolve the reference.
  * @param {String} targetId The id of the entity which is being referenced.
@@ -258,8 +259,8 @@ ReferenceProperty.fromString = function (targetCollection, referenceString) {
  * Gets the value of the property at the provided time.
  *
  * @param {JulianDate} time The time for which to retrieve the value.
- * @param {Object} [result] The object to store the value into, if omitted, a new instance is created and returned.
- * @returns {Object} The modified result parameter or a new instance if the result parameter was not supplied.
+ * @param {WrappedType} [result] The object to store the value into, if omitted, a new instance is created and returned.
+ * @returns {WrappedType} The modified result parameter or a new instance if the result parameter was not supplied.
  */
 ReferenceProperty.prototype.getValue = function (time, result) {
   var target = resolve(this);

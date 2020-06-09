@@ -7,8 +7,9 @@ import Event from "../Core/Event.js";
  *
  * @alias CallbackProperty
  * @constructor
+ * @template WrappedType = any
  *
- * @param {CallbackProperty.Callback} callback The function to be called when the property is evaluated.
+ * @param {CallbackProperty.Callback<WrappedType>} callback The function to be called when the property is evaluated.
  * @param {Boolean} isConstant <code>true</code> when the callback function returns the same value every time, <code>false</code> if the value will change.
  */
 function CallbackProperty(callback, isConstant) {
@@ -50,8 +51,8 @@ Object.defineProperties(CallbackProperty.prototype, {
  * Gets the value of the property.
  *
  * @param {JulianDate} [time] The time for which to retrieve the value.  This parameter is unused since the value does not change with respect to time.
- * @param {Object} [result] The object to store the value into, if omitted, a new instance is created and returned.
- * @returns {Object} The modified result parameter or a new instance if the result parameter was not supplied or is unsupported.
+ * @param {WrappedType} [result] The object to store the value into, if omitted, a new instance is created and returned.
+ * @returns {WrappedType | undefined} The modified result parameter or a new instance if the result parameter was not supplied or is unsupported.
  */
 CallbackProperty.prototype.getValue = function (time, result) {
   return this._callback(time, result);
@@ -60,7 +61,7 @@ CallbackProperty.prototype.getValue = function (time, result) {
 /**
  * Sets the callback to be used.
  *
- * @param {CallbackProperty.Callback} callback The function to be called when the property is evaluated.
+ * @param {CallbackProperty.Callback<WrappedType>} callback The function to be called when the property is evaluated.
  * @param {Boolean} isConstant <code>true</code> when the callback function returns the same value every time, <code>false</code> if the value will change.
  */
 CallbackProperty.prototype.setCallback = function (callback, isConstant) {
@@ -102,9 +103,10 @@ CallbackProperty.prototype.equals = function (other) {
 /**
  * A function that returns the value of the property.
  * @callback CallbackProperty.Callback
+ * @template WrappedType
  *
  * @param {JulianDate} [time] The time for which to retrieve the value.
- * @param {Object} [result] The object to store the value into, if omitted, a new instance is created and returned.
- * @returns {Object} The modified result parameter or a new instance if the result parameter was not supplied or is unsupported.
+ * @param {WrappedType} [result] The object to store the value into, if omitted, a new instance is created and returned.
+ * @returns {WrappedType | undefined} The modified result parameter or a new instance if the result parameter was not supplied or is unsupported.
  */
 export default CallbackProperty;

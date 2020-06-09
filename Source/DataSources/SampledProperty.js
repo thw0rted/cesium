@@ -117,8 +117,10 @@ function mergeNewSamples(epoch, times, values, newData, packedLength) {
  * provided set of samples and specified interpolation algorithm and degree.
  * @alias SampledProperty
  * @constructor
+ * @template WrappedType extends (number | Packable) = (number | Packable)
  *
- * @param {Number|Packable} type The type of property.
+ *
+ * @param {Type<WrappedType>} type The type of property.
  * @param {Packable[]} [derivativeTypes] When supplied, indicates that samples will contain derivative information of the specified types.
  *
  *
@@ -246,7 +248,7 @@ Object.defineProperties(SampledProperty.prototype, {
   /**
    * Gets the type of property.
    * @memberof SampledProperty.prototype
-   * @type {*}
+   * @type {Type<WrappedType>}
    */
   type: {
     get: function () {
@@ -363,8 +365,8 @@ Object.defineProperties(SampledProperty.prototype, {
  * Gets the value of the property at the provided time.
  *
  * @param {JulianDate} time The time for which to retrieve the value.
- * @param {Object} [result] The object to store the value into, if omitted, a new instance is created and returned.
- * @returns {Object} The modified result parameter or a new instance if the result parameter was not supplied.
+ * @param {WrappedType} [result] The object to store the value into, if omitted, a new instance is created and returned.
+ * @returns {WrappedType | undefined} The modified result parameter or a new instance if the result parameter was not supplied.
  */
 SampledProperty.prototype.getValue = function (time, result) {
   //>>includeStart('debug', pragmas.debug);
@@ -575,7 +577,7 @@ SampledProperty.prototype.setInterpolationOptions = function (options) {
  * Adds a new sample.
  *
  * @param {JulianDate} time The sample time.
- * @param {Packable} value The value at the provided time.
+ * @param {WrappedType} value The value at the provided time.
  * @param {Packable[]} [derivatives] The array of derivatives at the provided time.
  */
 SampledProperty.prototype.addSample = function (time, value, derivatives) {
@@ -616,7 +618,7 @@ SampledProperty.prototype.addSample = function (time, value, derivatives) {
  * Adds an array of samples.
  *
  * @param {JulianDate[]} times An array of JulianDate instances where each index is a sample time.
- * @param {Packable[]} values The array of values, where each value corresponds to the provided times index.
+ * @param {WrappedType[]} values The array of values, where each value corresponds to the provided times index.
  * @param {Array[]} [derivativeValues] An array where each item is the array of derivatives at the equivalent time index.
  *
  * @exception {DeveloperError} times and values must be the same length.

@@ -6,8 +6,9 @@ import Event from "../Core/Event.js";
  *
  * @alias ConstantProperty
  * @constructor
+ * @template WrappedType = any
  *
- * @param {*} [value] The property value.
+ * @param {WrappedType} [value] The property value.
  *
  * @see ConstantPositionProperty
  */
@@ -51,8 +52,8 @@ Object.defineProperties(ConstantProperty.prototype, {
  * Gets the value of the property.
  *
  * @param {JulianDate} [time] The time for which to retrieve the value.  This parameter is unused since the value does not change with respect to time.
- * @param {Object} [result] The object to store the value into, if omitted, a new instance is created and returned.
- * @returns {Object} The modified result parameter or a new instance if the result parameter was not supplied.
+ * @param {WrappedType} [result] The object to store the value into, if omitted, a new instance is created and returned.
+ * @returns {WrappedType | undefined} The modified result parameter or a new instance if the result parameter was not supplied.
  */
 ConstantProperty.prototype.getValue = function (time, result) {
   return this._hasClone ? this._value.clone(result) : this._value;
@@ -61,7 +62,7 @@ ConstantProperty.prototype.getValue = function (time, result) {
 /**
  * Sets the value of the property.
  *
- * @param {*} value The property value.
+ * @param {WrappedType | undefined} value The property value.
  */
 ConstantProperty.prototype.setValue = function (value) {
   var oldValue = this._value;
@@ -99,7 +100,7 @@ ConstantProperty.prototype.equals = function (other) {
 /**
  * Gets this property's value.
  *
- * @returns {*} This property's value.
+ * @returns {WrappedType | undefined} This property's value.
  */
 ConstantProperty.prototype.valueOf = function () {
   return this._value;

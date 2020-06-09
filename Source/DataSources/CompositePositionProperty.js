@@ -52,6 +52,9 @@ Object.defineProperties(CompositePositionProperty.prototype, {
       return this._definitionChanged;
     },
   },
+  // *** TODO *** TimeInterval and TimeIntervalCollection should be generic on
+  // the type of data they hold. Once that happens, this should be
+  // @type {TimeIntervalCollection<WrappedType>}
   /**
    * Gets the interval collection.
    * @memberof CompositePositionProperty.prototype
@@ -86,8 +89,8 @@ Object.defineProperties(CompositePositionProperty.prototype, {
  * Gets the value of the property at the provided time in the fixed frame.
  *
  * @param {JulianDate} time The time for which to retrieve the value.
- * @param {Object} [result] The object to store the value into, if omitted, a new instance is created and returned.
- * @returns {Object} The modified result parameter or a new instance if the result parameter was not supplied.
+ * @param {Cartesian3} [result] The object to store the value into, if omitted, a new instance is created and returned.
+ * @returns {Cartesian3 | undefined} The modified result parameter or a new instance if the result parameter was not supplied.
  */
 CompositePositionProperty.prototype.getValue = function (time, result) {
   return this.getValueInReferenceFrame(time, ReferenceFrame.FIXED, result);
@@ -99,7 +102,7 @@ CompositePositionProperty.prototype.getValue = function (time, result) {
  * @param {JulianDate} time The time for which to retrieve the value.
  * @param {ReferenceFrame} referenceFrame The desired referenceFrame of the result.
  * @param {Cartesian3} [result] The object to store the value into, if omitted, a new instance is created and returned.
- * @returns {Cartesian3} The modified result parameter or a new instance if the result parameter was not supplied.
+ * @returns {Cartesian3 | undefined} The modified result parameter or a new instance if the result parameter was not supplied.
  */
 CompositePositionProperty.prototype.getValueInReferenceFrame = function (
   time,

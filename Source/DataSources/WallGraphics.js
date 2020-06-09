@@ -10,18 +10,18 @@ import createPropertyDescriptor from "./createPropertyDescriptor.js";
  *
  * Initialization options for the WallGraphics constructor
  *
- * @property {Property | boolean} [show=true] A boolean Property specifying the visibility of the wall.
- * @property {Property | Array<Cartesian3>} [positions] A Property specifying the array of {@link Cartesian3} positions which define the top of the wall.
- * @property {Property | Array<number>} [minimumHeights] A Property specifying an array of heights to be used for the bottom of the wall instead of the globe surface.
- * @property {Property | Array<number>} [maximumHeights] A Property specifying an array of heights to be used for the top of the wall instead of the height of each position.
- * @property {Property | number} [granularity=Cesium.Math.RADIANS_PER_DEGREE] A numeric Property specifying the angular distance between each latitude and longitude point.
- * @property {Property | boolean} [fill=true] A boolean Property specifying whether the wall is filled with the provided material.
+ * @property {Property<boolean> | boolean} [show=true] A boolean Property specifying the visibility of the wall.
+ * @property {Property<Array<Cartesian3>> | Array<Cartesian3>} [positions] A Property specifying the array of {@link Cartesian3} positions which define the top of the wall.
+ * @property {Property<Array<number>> | Array<number>} [minimumHeights] A Property specifying an array of heights to be used for the bottom of the wall instead of the globe surface.
+ * @property {Property<Array<number>> | Array<number>} [maximumHeights] A Property specifying an array of heights to be used for the top of the wall instead of the height of each position.
+ * @property {Property<number> | number} [granularity=Cesium.Math.RADIANS_PER_DEGREE] A numeric Property specifying the angular distance between each latitude and longitude point.
+ * @property {Property<boolean> | boolean} [fill=true] A boolean Property specifying whether the wall is filled with the provided material.
  * @property {MaterialProperty | Color} [material=Color.WHITE] A Property specifying the material used to fill the wall.
- * @property {Property | boolean} [outline=false] A boolean Property specifying whether the wall is outlined.
- * @property {Property | Color} [outlineColor=Color.BLACK] A Property specifying the {@link Color} of the outline.
- * @property {Property | number} [outlineWidth=1.0] A numeric Property specifying the width of the outline.
- * @property {Property | ShadowMode} [shadows=ShadowMode.DISABLED] An enum Property specifying whether the wall casts or receives shadows from light sources.
- * @property {Property | DistanceDisplayCondition} [distanceDisplayCondition] A Property specifying at what distance from the camera that this wall will be displayed.
+ * @property {Property<boolean> | boolean} [outline=false] A boolean Property specifying whether the wall is outlined.
+ * @property {Property<Color> | Color} [outlineColor=Color.BLACK] A Property specifying the {@link Color} of the outline.
+ * @property {Property<number> | number} [outlineWidth=1.0] A numeric Property specifying the width of the outline.
+ * @property {Property<ShadowMode> | ShadowMode} [shadows=ShadowMode.DISABLED] An enum Property specifying whether the wall casts or receives shadows from light sources.
+ * @property {Property<DistanceDisplayCondition> | DistanceDisplayCondition} [distanceDisplayCondition] A Property specifying at what distance from the camera that this wall will be displayed.
  */
 
 /**
@@ -83,7 +83,7 @@ Object.defineProperties(WallGraphics.prototype, {
   /**
    * Gets or sets the boolean Property specifying the visibility of the wall.
    * @memberof WallGraphics.prototype
-   * @type {Property|undefined}
+   * @type {Property<boolean>|undefined}
    * @default true
    */
   show: createPropertyDescriptor("show"),
@@ -91,7 +91,7 @@ Object.defineProperties(WallGraphics.prototype, {
   /**
    * Gets or sets the Property specifying the array of {@link Cartesian3} positions which define the top of the wall.
    * @memberof WallGraphics.prototype
-   * @type {Property|undefined}
+   * @type {Property<Array<Cartesian3>>|undefined}
    */
   positions: createPropertyDescriptor("positions"),
 
@@ -99,7 +99,7 @@ Object.defineProperties(WallGraphics.prototype, {
    * Gets or sets the Property specifying an array of heights to be used for the bottom of the wall instead of the surface of the globe.
    * If defined, the array must be the same length as {@link Wall#positions}.
    * @memberof WallGraphics.prototype
-   * @type {Property|undefined}
+   * @type {Property<Array<number>>|undefined}
    */
   minimumHeights: createPropertyDescriptor("minimumHeights"),
 
@@ -107,14 +107,14 @@ Object.defineProperties(WallGraphics.prototype, {
    * Gets or sets the Property specifying an array of heights to be used for the top of the wall instead of the height of each position.
    * If defined, the array must be the same length as {@link Wall#positions}.
    * @memberof WallGraphics.prototype
-   * @type {Property|undefined}
+   * @type {Property<Array<number>>|undefined}
    */
   maximumHeights: createPropertyDescriptor("maximumHeights"),
 
   /**
    * Gets or sets the numeric Property specifying the angular distance between points on the wall.
    * @memberof WallGraphics.prototype
-   * @type {Property|undefined}
+   * @type {Property<number>|undefined}
    * @default {CesiumMath.RADIANS_PER_DEGREE}
    */
   granularity: createPropertyDescriptor("granularity"),
@@ -122,7 +122,7 @@ Object.defineProperties(WallGraphics.prototype, {
   /**
    * Gets or sets the boolean Property specifying whether the wall is filled with the provided material.
    * @memberof WallGraphics.prototype
-   * @type {Property|undefined}
+   * @type {Property<boolean>|undefined}
    * @default true
    */
   fill: createPropertyDescriptor("fill"),
@@ -130,7 +130,7 @@ Object.defineProperties(WallGraphics.prototype, {
   /**
    * Gets or sets the Property specifying the material used to fill the wall.
    * @memberof WallGraphics.prototype
-   * @type {MaterialProperty}
+   * @type {MaterialProperty | undefined}
    * @default Color.WHITE
    */
   material: createMaterialPropertyDescriptor("material"),
@@ -138,7 +138,7 @@ Object.defineProperties(WallGraphics.prototype, {
   /**
    * Gets or sets the Property specifying whether the wall is outlined.
    * @memberof WallGraphics.prototype
-   * @type {Property|undefined}
+   * @type {Property<boolean>|undefined}
    * @default false
    */
   outline: createPropertyDescriptor("outline"),
@@ -146,7 +146,7 @@ Object.defineProperties(WallGraphics.prototype, {
   /**
    * Gets or sets the Property specifying the {@link Color} of the outline.
    * @memberof WallGraphics.prototype
-   * @type {Property|undefined}
+   * @type {Property<Color>|undefined}
    * @default Color.BLACK
    */
   outlineColor: createPropertyDescriptor("outlineColor"),
@@ -154,7 +154,7 @@ Object.defineProperties(WallGraphics.prototype, {
   /**
    * Gets or sets the numeric Property specifying the width of the outline.
    * @memberof WallGraphics.prototype
-   * @type {Property|undefined}
+   * @type {Property<number>|undefined}
    * @default 1.0
    */
   outlineWidth: createPropertyDescriptor("outlineWidth"),
@@ -163,7 +163,7 @@ Object.defineProperties(WallGraphics.prototype, {
    * Get or sets the enum Property specifying whether the wall
    * casts or receives shadows from light sources.
    * @memberof WallGraphics.prototype
-   * @type {Property|undefined}
+   * @type {Property<ShadowMode>|undefined}
    * @default ShadowMode.DISABLED
    */
   shadows: createPropertyDescriptor("shadows"),
@@ -171,7 +171,7 @@ Object.defineProperties(WallGraphics.prototype, {
   /**
    * Gets or sets the {@link DistanceDisplayCondition} Property specifying at what distance from the camera that this wall will be displayed.
    * @memberof WallGraphics.prototype
-   * @type {Property|undefined}
+   * @type {Property<DistanceDisplayCondition>|undefined}
    */
   distanceDisplayCondition: createPropertyDescriptor(
     "distanceDisplayCondition"

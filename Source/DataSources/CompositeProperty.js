@@ -27,6 +27,7 @@ function subscribeAll(property, eventHelper, definitionChanged, intervals) {
  *
  * @alias CompositeProperty
  * @constructor
+ * @template WrappedType extends (number | Packable) = (number | Packable)
  *
  *
  * @example
@@ -90,6 +91,9 @@ Object.defineProperties(CompositeProperty.prototype, {
       return this._definitionChanged;
     },
   },
+  // *** TODO *** TimeInterval and TimeIntervalCollection should be generic on
+  // the type of data they hold. Once that happens, this should be
+  // @type {TimeIntervalCollection<WrappedType>}
   /**
    * Gets the interval collection.
    * @memberof CompositeProperty.prototype
@@ -107,8 +111,8 @@ Object.defineProperties(CompositeProperty.prototype, {
  * Gets the value of the property at the provided time.
  *
  * @param {JulianDate} time The time for which to retrieve the value.
- * @param {Object} [result] The object to store the value into, if omitted, a new instance is created and returned.
- * @returns {Object} The modified result parameter or a new instance if the result parameter was not supplied.
+ * @param {WrappedType} [result] The object to store the value into, if omitted, a new instance is created and returned.
+ * @returns {WrappedType | undefined} The modified result parameter or a new instance if the result parameter was not supplied.
  */
 CompositeProperty.prototype.getValue = function (time, result) {
   //>>includeStart('debug', pragmas.debug);

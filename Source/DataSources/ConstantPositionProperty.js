@@ -13,7 +13,7 @@ import PositionProperty from "./PositionProperty.js";
  * @alias ConstantPositionProperty
  * @constructor
  *
- * @param {Cartesian3} [value] The property value.
+ * @param {Cartesian3 | undefined} [value] The property value.
  * @param {ReferenceFrame} [referenceFrame=ReferenceFrame.FIXED] The reference frame in which the position is defined.
  */
 function ConstantPositionProperty(value, referenceFrame) {
@@ -69,8 +69,8 @@ Object.defineProperties(ConstantPositionProperty.prototype, {
  * Gets the value of the property at the provided time in the fixed frame.
  *
  * @param {JulianDate} time The time for which to retrieve the value.
- * @param {Object} [result] The object to store the value into, if omitted, a new instance is created and returned.
- * @returns {Object} The modified result parameter or a new instance if the result parameter was not supplied.
+ * @param {Cartesian3} [result] The object to store the value into, if omitted, a new instance is created and returned.
+ * @returns {Cartesian3 | undefined} The modified result parameter or a new instance if the result parameter was not supplied.
  */
 ConstantPositionProperty.prototype.getValue = function (time, result) {
   return this.getValueInReferenceFrame(time, ReferenceFrame.FIXED, result);
@@ -79,7 +79,7 @@ ConstantPositionProperty.prototype.getValue = function (time, result) {
 /**
  * Sets the value of the property.
  *
- * @param {Cartesian3} value The property value.
+ * @param {Cartesian3 | undefined} value The property value.
  * @param {ReferenceFrame} [referenceFrame=this.referenceFrame] The reference frame in which the position is defined.
  */
 ConstantPositionProperty.prototype.setValue = function (value, referenceFrame) {
@@ -103,7 +103,7 @@ ConstantPositionProperty.prototype.setValue = function (value, referenceFrame) {
  * @param {JulianDate} time The time for which to retrieve the value.
  * @param {ReferenceFrame} referenceFrame The desired referenceFrame of the result.
  * @param {Cartesian3} [result] The object to store the value into, if omitted, a new instance is created and returned.
- * @returns {Cartesian3} The modified result parameter or a new instance if the result parameter was not supplied.
+ * @returns {Cartesian3 | undefined} The modified result parameter or a new instance if the result parameter was not supplied.
  */
 ConstantPositionProperty.prototype.getValueInReferenceFrame = function (
   time,

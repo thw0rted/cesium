@@ -1571,6 +1571,9 @@ function createTypeScriptDefinitions() {
 /** This has to be in the workaround section because JSDoc doesn't support Intersection Types */
 type PropertyBag = { [key: string]: Property | undefined; } & Property & PropertyBagBase;
 
+// Shorthand for "constructor for / typeof T"
+type Type<T> = {new: (...args: any[]) => T};
+
 ${source}
 }
 

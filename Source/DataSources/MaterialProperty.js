@@ -10,6 +10,7 @@ import Material from "../Scene/Material.js";
  * @alias MaterialProperty
  * @constructor
  * @abstract
+ * @template WrappedType extends Material = Material
  *
  * @see ColorMaterialProperty
  * @see CompositeMaterialProperty
@@ -63,8 +64,8 @@ MaterialProperty.prototype.getType = DeveloperError.throwInstantiationError;
  * @function
  *
  * @param {JulianDate} time The time for which to retrieve the value.
- * @param {Object} [result] The object to store the value into, if omitted, a new instance is created and returned.
- * @returns {Object} The modified result parameter or a new instance if the result parameter was not supplied.
+ * @param {WrappedType | undefined} [result] The object to store the value into, if omitted, a new instance is created and returned.
+ * @returns {WrappedType | undefined} The modified result parameter or a new instance if the result parameter was not supplied.
  */
 MaterialProperty.prototype.getValue = DeveloperError.throwInstantiationError;
 
