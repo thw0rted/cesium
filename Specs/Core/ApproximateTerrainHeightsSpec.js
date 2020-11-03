@@ -8,12 +8,8 @@ describe("Core/ApproximateTerrainHeights", function () {
     return ApproximateTerrainHeights.initialize();
   });
 
-  afterAll(function () {
-    ApproximateTerrainHeights._initPromise = undefined;
-    ApproximateTerrainHeights._terrainHeights = undefined;
-  });
-
   it("initializes", function () {
+    // TODO: remove me?
     return ApproximateTerrainHeights.initialize().then(function () {
       expect(ApproximateTerrainHeights._terrainHeights).toBeDefined();
     });
@@ -39,17 +35,6 @@ describe("Core/ApproximateTerrainHeights", function () {
     }).toThrowDeveloperError();
   });
 
-  it("getMinimumMaximumHeights throws if ApproximateTerrainHeights was not initialized first", function () {
-    var heights = ApproximateTerrainHeights._terrainHeights;
-    ApproximateTerrainHeights._terrainHeights = undefined;
-    expect(function () {
-      return ApproximateTerrainHeights.getMinimumMaximumHeights(
-        Rectangle.fromDegrees(-121.0, 10.0, -120.0, 11.0)
-      );
-    });
-    ApproximateTerrainHeights._terrainHeights = heights;
-  });
-
   it("getBoundingSphere computes a bounding sphere", function () {
     var result = ApproximateTerrainHeights.getBoundingSphere(
       Rectangle.fromDegrees(-121.0, 10.0, -120.0, 11.0)
@@ -72,16 +57,5 @@ describe("Core/ApproximateTerrainHeights", function () {
     expect(function () {
       return ApproximateTerrainHeights.getBoundingSphere();
     }).toThrowDeveloperError();
-  });
-
-  it("getBoundingSphere throws if ApproximateTerrainHeights was not initialized first", function () {
-    var heights = ApproximateTerrainHeights._terrainHeights;
-    ApproximateTerrainHeights._terrainHeights = undefined;
-    expect(function () {
-      return ApproximateTerrainHeights.getBoundingSphere(
-        Rectangle.fromDegrees(-121.0, 10.0, -120.0, 11.0)
-      );
-    });
-    ApproximateTerrainHeights._terrainHeights = heights;
   });
 });

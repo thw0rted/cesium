@@ -1,16 +1,15 @@
 import BoundingSphere from "./BoundingSphere.js";
-import buildModuleUrl from "./buildModuleUrl.js";
 import Cartesian2 from "./Cartesian2.js";
 import Cartesian3 from "./Cartesian3.js";
 import Cartographic from "./Cartographic.js";
 import Check from "./Check.js";
 import defaultValue from "./defaultValue.js";
 import defined from "./defined.js";
-import DeveloperError from "./DeveloperError.js";
 import Ellipsoid from "./Ellipsoid.js";
 import GeographicTilingScheme from "./GeographicTilingScheme.js";
 import Rectangle from "./Rectangle.js";
-import Resource from "./Resource.js";
+import TerrainHeightData from "../Assets/approximateTerrainHeights.js";
+import when from "../ThirdParty/when.js";
 
 var scratchDiagonalCartesianNE = new Cartesian3();
 var scratchDiagonalCartesianSW = new Cartesian3();
@@ -36,22 +35,12 @@ var ApproximateTerrainHeights = {};
 
 /**
  * Initializes the minimum and maximum terrain heights
+ * @deprecated
  * @return {Promise<void>}
  */
 ApproximateTerrainHeights.initialize = function () {
-  var initPromise = ApproximateTerrainHeights._initPromise;
-  if (defined(initPromise)) {
-    return initPromise;
-  }
-
-  initPromise = Resource.fetchJson(
-    buildModuleUrl("Assets/approximateTerrainHeights.json")
-  ).then(function (json) {
-    ApproximateTerrainHeights._terrainHeights = json;
-  });
-  ApproximateTerrainHeights._initPromise = initPromise;
-
-  return initPromise;
+  // No-op, included for legacy support
+  return when.resolve(undefined);
 };
 
 /**
@@ -66,11 +55,6 @@ ApproximateTerrainHeights.getMinimumMaximumHeights = function (
 ) {
   //>>includeStart('debug', pragmas.debug);
   Check.defined("rectangle", rectangle);
-  if (!defined(ApproximateTerrainHeights._terrainHeights)) {
-    throw new DeveloperError(
-      "You must call ApproximateTerrainHeights.initialize and wait for the promise to resolve before using this function"
-    );
-  }
   //>>includeEnd('debug');
   ellipsoid = defaultValue(ellipsoid, Ellipsoid.WGS84);
 
@@ -137,11 +121,6 @@ ApproximateTerrainHeights.getMinimumMaximumHeights = function (
 ApproximateTerrainHeights.getBoundingSphere = function (rectangle, ellipsoid) {
   //>>includeStart('debug', pragmas.debug);
   Check.defined("rectangle", rectangle);
-  if (!defined(ApproximateTerrainHeights._terrainHeights)) {
-    throw new DeveloperError(
-      "You must call ApproximateTerrainHeights.initialize and wait for the promise to resolve before using this function"
-    );
-  }
   //>>includeEnd('debug');
   ellipsoid = defaultValue(ellipsoid, Ellipsoid.WGS84);
 
@@ -237,21 +216,11 @@ function getTileXYLevel(rectangle) {
 ApproximateTerrainHeights._terrainHeightsMaxLevel = 6;
 ApproximateTerrainHeights._defaultMaxTerrainHeight = 9000.0;
 ApproximateTerrainHeights._defaultMinTerrainHeight = -100000.0;
-ApproximateTerrainHeights._terrainHeights = undefined;
-ApproximateTerrainHeights._initPromise = undefined;
+ApproximateTerrainHeights._terrainHeights = TerrainHeightData;
+/**
+ * True if terrain height data has been loaded. Included for legacy support.
+ * @deprecated
+ */
+ApproximateTerrainHeights.initialized = true;
 
-Object.defineProperties(ApproximateTerrainHeights, {
-  /**
-   * Determines if the terrain heights are initialized and ready to use. To initialize the terrain heights,
-   * call {@link ApproximateTerrainHeights#initialize} and wait for the returned promise to resolve.
-   * @type {Boolean}
-   * @readonly
-   * @memberof ApproximateTerrainHeights
-   */
-  initialized: {
-    get: function () {
-      return defined(ApproximateTerrainHeights._terrainHeights);
-    },
-  },
-});
 export default ApproximateTerrainHeights;
