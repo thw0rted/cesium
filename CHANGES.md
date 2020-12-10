@@ -2,6 +2,10 @@
 
 ### 1.77 - 2020-01-04
 
+##### Additions :tada:
+
+- Added `GeoJsonSource.process` to support adding features without removing existing entities, similar to `CzmlDataSource.process`. [#9275](https://github.com/CesiumGS/cesium/issues/9275)
+
 ##### Deprecated :hourglass_flowing_sand:
 
 - `EasingFunction.QUADRACTIC_IN` was deprecated and will be removed in Cesium 1.79. It has been replaced with `EasingFunction.QUADRATIC_IN`. [#9220](https://github.com/CesiumGS/cesium/issues/9220)
